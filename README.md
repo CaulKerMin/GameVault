@@ -1,21 +1,24 @@
-# GameVault
+# GameVault · v2.5.0
 
-GameVault v2.5.0 · GitHub Pages 自动部署版。
+GameVault v2.5.0 · GitHub Pages 自动部署版。你无需在个人电脑安装 Node.js 或运行项目，GitHub Actions 会在云端解压源码、运行测试并部署静态前端。
 
-本仓库以完整源码压缩包作为发布源。GitHub Actions 会在云端解压源码、运行测试与发布检查、生成可下载的完整 ZIP，并将 `frontend/` 发布到 GitHub Pages。无需在个人电脑安装 Node.js 或运行项目。
+## 首次设置（只需一次）
 
-## 自动部署
+1. 将本次交付的 `GameVault-v2.5.0-full-project.zip` 文件直接上传到本仓库根目录（GitHub 网页 → **Add file → Upload files**）。注意：这里上传 ZIP 本身即可，不需要在本机解压或运行。
+2. 打开仓库 **Settings → Pages**，将 **Build and deployment → Source** 设为 **GitHub Actions**。
+3. 打开 **Actions**，选择 **GameVault · GitHub Pages 自动部署与完整项目打包**，点击 **Run workflow**。后续更新 ZIP 或工作流后会自动触发。
+4. 等待测试和部署完成。站点地址为 `https://caulkermin.github.io/GameVault/`。
 
-1. 打开仓库 **Settings → Pages**，将 **Build and deployment → Source** 设为 **GitHub Actions**（首次部署时如尚未启用 Pages，请完成此设置）。
-2. 打开 **Actions**，运行 **GameVault · GitHub Pages 自动部署与源码打包** 工作流；也可以向 `main` 分支提交更新后自动触发。
-3. 等待测试、打包和 Pages 部署步骤全部成功。
-4. 网站地址：`https://caulkermin.github.io/GameVault/`（首次部署成功后生效）。
-5. 完整源码 ZIP 与 SHA-256 校验文件位于该次 Actions 运行详情页底部的 **Artifacts**，保留 90 天。
+## 自动化流程
 
-## 源码
+- Actions 在 GitHub 云端解压项目 ZIP。
+- 运行 `npm test` 和 `npm run verify:release`。
+- 将 `frontend/` 发布到 GitHub Pages。
+- 将完整 ZIP 和 SHA-256 校验文件作为 Actions Artifact 保留 90 天。
 
-- 完整项目：[`GameVault-v2.5.0-full-project.zip`](./GameVault-v2.5.0-full-project.zip)
-- 校验文件：[`GameVault-v2.5.0-full-project.zip.sha256`](./GameVault-v2.5.0-full-project.zip.sha256)
+## 完整项目 ZIP
+
+将 `GameVault-v2.5.0-full-project.zip` 上传到仓库根目录后，工作流会检查该文件并将它附加到每次成功运行的 Artifacts 中。
 
 压缩包包含前端、Node.js 排行榜 API、自动化测试、脚本、文档及原始工作流。
 
@@ -25,5 +28,4 @@ GitHub Pages 只托管静态前端，不运行 Node.js 后端。三款游戏可�
 
 ## 工作流
 
-- `.github/workflows/ci.yml`：Push / Pull Request 自动测试。
-- `.github/workflows/pages.yml`：解压完整源码、测试、生成 ZIP 与校验文件、部署 GitHub Pages。
+- `.github/workflows/pages.yml`：解压完整源码、测试、部署 GitHub Pages，并上传完整 ZIP Artifact。
