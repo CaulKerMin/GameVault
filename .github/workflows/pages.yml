@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'GameVault-v2.5.0-full-project.zip'
+      - 'GameVault-upload/READY'
   workflow_dispatch:
 
 permissions:
@@ -28,16 +28,24 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: Reassemble uploaded archive chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s GameVault-upload/READY
+          cat GameVault-upload/part-*.b64 | base64 --decode > GameVault-v2.5.0-full-project.zip
+          test -s GameVault-v2.5.0-full-project.zip
+
       - name: Extract project archive into the Git working tree
         shell: bash
         run: |
           set -euo pipefail
-          test -s GameVault-v2.5.0-full-project.zip
           mkdir -p "${RUNNER_TEMP}/gamevault-source"
           unzip -q GameVault-v2.5.0-full-project.zip -d "${RUNNER_TEMP}/gamevault-source"
           test -f "${RUNNER_TEMP}/gamevault-source/package.json"
           test -d "${RUNNER_TEMP}/gamevault-source/frontend"
           cp -a "${RUNNER_TEMP}/gamevault-source/." .
+          rm -rf GameVault-upload
           rm -f GameVault-v2.5.0-full-project.zip
           rm -f GameVault-v2.5.0-full-project.zip.sha256
           git config user.name "github-actions[bot]"
