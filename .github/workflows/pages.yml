@@ -1,10 +1,8 @@
-name: GameVault · 首次解包、自动测试与 GitHub Pages 发布
+name: GameVault · ZIP 首次导入、自动测试与 GitHub Pages 发布
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'GameVault-upload/READY'
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -13,11 +11,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
+  group: github-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  expand-test-deploy:
+  deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -28,31 +26,51 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Reassemble uploaded archive chunks
+      - name: Expand uploaded ZIP into Git source tree (first run only)
         shell: bash
         run: |
           set -euo pipefail
-          test -s GameVault-upload/READY
-          cat GameVault-upload/part-*.b64 | base64 --decode > GameVault-v2.5.0-full-project.zip
-          test -s GameVault-v2.5.0-full-project.zip
+          if [[ -f package.json && -d frontend ]]; then
+            echo "GameVault source tree already exists; skipping one-time extraction."
+          else
+            ARCHIVE="GameVault-v2.5.0-full-project.zip"
+            test -s "$ARCHIVE"
+            if [[ -f "${ARCHIVE}.sha256" ]]; then
+              sha256sum -c "${ARCHIVE}.sha256"
+            fi
+            unzip -tq "$ARCHIVE"
 
-      - name: Extract project archive into the Git working tree
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "${RUNNER_TEMP}/gamevault-source"
-          unzip -q GameVault-v2.5.0-full-project.zip -d "${RUNNER_TEMP}/gamevault-source"
-          test -f "${RUNNER_TEMP}/gamevault-source/package.json"
-          test -d "${RUNNER_TEMP}/gamevault-source/frontend"
-          cp -a "${RUNNER_TEMP}/gamevault-source/." .
-          rm -rf GameVault-upload
-          rm -f GameVault-v2.5.0-full-project.zip
-          rm -f GameVault-v2.5.0-full-project.zip.sha256
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Expand GameVault v2.5.0 source tree"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+            SOURCE_DIR="${RUNNER_TEMP}/gamevault-source"
+            mkdir -p "$SOURCE_DIR"
+            unzip -q "$ARCHIVE" -d "$SOURCE_DIR"
+            test -f "${SOURCE_DIR}/package.json"
+            test -f "${SOURCE_DIR}/frontend/index.html"
+            test -f "${SOURCE_DIR}/backend/server.js"
+
+            # Keep this bootstrap workflow instead of replacing it with the
+            # older workflow bundled inside the source archive.
+            cp .github/workflows/pages.yml "${RUNNER_TEMP}/pages.yml"
+            cp -a "${SOURCE_DIR}/." .
+            cp "${RUNNER_TEMP}/pages.yml" .github/workflows/pages.yml
+
+            # Remove the incomplete temporary base64 upload from the earlier attempt.
+            rm -rf GameVault-upload
+            sha256sum "$ARCHIVE" > "${ARCHIVE}.sha256"
+
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            if git diff --cached --quiet; then
+              echo "No source-tree changes to commit."
+            else
+              git commit -m "chore: expand GameVault v2.5.0 source tree"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+            fi
+          fi
+
+          test -f package.json
+          test -f frontend/index.html
+          test -f backend/server.js
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -73,12 +91,12 @@ jobs:
           VERSION="$(node -p "require('./package.json').version")"
           ARCHIVE_NAME="GameVault-v${VERSION}-full-project.zip"
           ARCHIVE_PATH="${RUNNER_TEMP}/${ARCHIVE_NAME}"
-          zip -r "${ARCHIVE_PATH}" . \
+          zip -r -q "${ARCHIVE_PATH}" . \
             -x ".git/*" "*/.git/*" \
                "node_modules/*" "*/node_modules/*" \
                "backend/data/*.json" \
                "*.zip" "*.sha256"
-          (cd "${RUNNER_TEMP}" && sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256")
+          sha256sum "${ARCHIVE_PATH}" > "${ARCHIVE_PATH}.sha256"
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "archive_path=${ARCHIVE_PATH}" >> "${GITHUB_OUTPUT}"
           echo "checksum_path=${ARCHIVE_PATH}.sha256" >> "${GITHUB_OUTPUT}"
@@ -95,6 +113,8 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload static frontend to Pages
         uses: actions/upload-pages-artifact@v3
