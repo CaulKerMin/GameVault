@@ -1,0 +1,74 @@
+name: GameVault · GitHub Pages 自动部署与完整项目打包
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'GameVault-v2.5.0-full-project.zip'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify source archive exists
+        run: test -s GameVault-v2.5.0-full-project.zip
+
+      - name: Extract full project
+        run: |
+          mkdir -p source
+          unzip -q GameVault-v2.5.0-full-project.zip -d source
+          test -f source/package.json
+          test -d source/frontend
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run tests and release verification
+        working-directory: source
+        run: |
+          npm test
+          npm run verify:release
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static frontend
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: source/frontend
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Generate archive checksum
+        run: sha256sum GameVault-v2.5.0-full-project.zip > GameVault-v2.5.0-full-project.zip.sha256
+
+      - name: Upload complete project package
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameVault-v2.5.0-full-project
+          path: |
+            GameVault-v2.5.0-full-project.zip
+            GameVault-v2.5.0-full-project.zip.sha256
+          if-no-files-found: error
+          retention-days: 90
