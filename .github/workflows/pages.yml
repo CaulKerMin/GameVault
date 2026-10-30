@@ -1,15 +1,14 @@
-name: GameVault · GitHub Pages 自动部署与完整项目打包
+name: GameVault · 首次解包、自动测试与 GitHub Pages 发布
 
 on:
   push:
     branches: [main]
     paths:
       - 'GameVault-v2.5.0-full-project.zip'
-      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -18,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  expand-test-deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -26,49 +25,74 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: Verify source archive exists
-        run: test -s GameVault-v2.5.0-full-project.zip
-
-      - name: Extract full project
+      - name: Extract project archive into the Git working tree
+        shell: bash
         run: |
-          mkdir -p source
-          unzip -q GameVault-v2.5.0-full-project.zip -d source
-          test -f source/package.json
-          test -d source/frontend
+          set -euo pipefail
+          test -s GameVault-v2.5.0-full-project.zip
+          mkdir -p "${RUNNER_TEMP}/gamevault-source"
+          unzip -q GameVault-v2.5.0-full-project.zip -d "${RUNNER_TEMP}/gamevault-source"
+          test -f "${RUNNER_TEMP}/gamevault-source/package.json"
+          test -d "${RUNNER_TEMP}/gamevault-source/frontend"
+          cp -a "${RUNNER_TEMP}/gamevault-source/." .
+          rm -f GameVault-v2.5.0-full-project.zip
+          rm -f GameVault-v2.5.0-full-project.zip.sha256
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Expand GameVault v2.5.0 source tree"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Run tests and release verification
-        working-directory: source
+      - name: Run automated tests
+        run: npm test
+
+      - name: Verify release files and references
+        run: npm run verify:release
+
+      - name: Package complete source tree
+        id: package
+        shell: bash
         run: |
-          npm test
-          npm run verify:release
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          ARCHIVE_NAME="GameVault-v${VERSION}-full-project.zip"
+          ARCHIVE_PATH="${RUNNER_TEMP}/${ARCHIVE_NAME}"
+          zip -r "${ARCHIVE_PATH}" . \
+            -x ".git/*" "*/.git/*" \
+               "node_modules/*" "*/node_modules/*" \
+               "backend/data/*.json" \
+               "*.zip" "*.sha256"
+          (cd "${RUNNER_TEMP}" && sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256")
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "archive_path=${ARCHIVE_PATH}" >> "${GITHUB_OUTPUT}"
+          echo "checksum_path=${ARCHIVE_PATH}.sha256" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload complete project ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameVault-v${{ steps.package.outputs.version }}-full-project
+          path: |
+            ${{ steps.package.outputs.archive_path }}
+            ${{ steps.package.outputs.checksum_path }}
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload static frontend
+      - name: Upload static frontend to Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: source/frontend
+          path: frontend
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Generate archive checksum
-        run: sha256sum GameVault-v2.5.0-full-project.zip > GameVault-v2.5.0-full-project.zip.sha256
-
-      - name: Upload complete project package
-        uses: actions/upload-artifact@v4
-        with:
-          name: GameVault-v2.5.0-full-project
-          path: |
-            GameVault-v2.5.0-full-project.zip
-            GameVault-v2.5.0-full-project.zip.sha256
-          if-no-files-found: error
-          retention-days: 90
