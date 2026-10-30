@@ -31,8 +31,7 @@ scripts/
   dev.js                     可选本地开发启动器
   verify-release.js          发布前检查
 .github/workflows/
-  ci.yml                     Push / PR 自动测试
-  pages.yml                  Pages 自动部署 + 完整源码 ZIP 打包
+  pages.yml                  Push / 手动触发：自动测试、发布检查、Pages 部署与完整源码 ZIP 打包
 .env.example                 后端环境变量模板
 README.md                    项目说明
 GITHUB-PAGES-CHECKLIST.md    GitHub 网页部署检查清单
