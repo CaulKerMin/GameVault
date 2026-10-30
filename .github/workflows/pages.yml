@@ -52,6 +52,8 @@ jobs:
             cp .github/workflows/pages.yml "${RUNNER_TEMP}/pages.yml"
             cp -a "${SOURCE_DIR}/." .
             cp "${RUNNER_TEMP}/pages.yml" .github/workflows/pages.yml
+            # The workflow token cannot create new workflow files; add ci.yml separately via GitHub.
+            rm -f .github/workflows/ci.yml
 
             # Remove the incomplete temporary base64 upload from the earlier attempt.
             rm -rf GameVault-upload
