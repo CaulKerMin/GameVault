@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d17"><meta name="description" content="玩扫雷小游戏，用数字推理并避开地雷。">
+  <title>扫雷 — GameVault</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <script src="../../assets/js/config.js" defer></script><script src="../../assets/js/api.js" defer></script><script src="../../assets/js/common.js" defer></script><script src="logic.js" defer></script><script src="game.js" defer></script>
+</head>
+<body data-game="minesweeper">
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true">✦</span><span>GameVault<small>PLAY YOUR WAY</small></span></a>
+    <nav class="nav-links" aria-label="主导航"><a href="../../index.html#games">游戏库</a><a href="../../index.html#features">平台特色</a></nav>
+    <div class="header-actions"><button class="icon-button" type="button" data-theme-toggle aria-label="切换主题">☼</button><a class="button button-secondary" href="../../index.html">← 返回首页</a></div>
+  </div></header>
+  <main class="container game-page">
+    <div class="breadcrumbs"><a href="../../index.html">首页</a><span>/</span><a href="../../index.html#games">游戏库</a><span>/</span><span>扫雷</span></div>
+    <div class="game-page-heading"><div><span class="eyebrow">💣 LOGIC · 逻辑推理</span><h1>扫雷</h1><p>观察数字判断周围的地雷数量，标记危险格，揭开所有安全区域。</p></div><button class="button button-primary" id="new-game-button" type="button">↻ 新开一局</button></div>
+    <div class="game-layout">
+      <section class="game-main-panel" aria-label="扫雷游戏区域">
+        <div class="panel-topline"><h2>8 × 8 初级雷区</h2><span class="status-pill" id="status-pill" data-state="ready">等待第一次点击</span></div>
+        <div class="game-stats">
+          <div class="game-stat"><span>剩余旗帜</span><strong id="flags-left">10</strong></div>
+          <div class="game-stat"><span>用时</span><strong id="timer">00:00</strong></div>
+          <div class="game-stat"><span>最佳用时</span><strong id="best-time">—</strong></div>
+        </div>
+        <div class="mine-board-wrap"><div class="mine-board" id="mine-board" role="group" aria-label="扫雷棋盘"></div><p class="puzzle-message" id="game-message" aria-live="polite">第一步会自动避开雷区，放心点开任意格子。</p></div>
+        <div class="game-controls"><button class="button button-secondary flag-toggle" id="flag-mode-button" type="button" aria-pressed="false">🚩 插旗模式：关闭</button><button class="button button-quiet" id="reset-button" type="button">重置棋盘</button></div>
+        <div class="game-instructions"><span class="instruction-icon">🧩</span><div><strong>玩法说明</strong><br>点击格子揭开区域；电脑端右键插旗，手机端先开启插旗模式。键盘可用方向键移动，按 F 插旗。数字表示周围 8 格的地雷数量，揭开所有安全格即可获胜，插旗可以辅助判断。</div></div>
+      </section>
+      <aside>
+        <section class="side-panel"><h2>🏆 通关榜</h2><p>通关越快，得分越高。</p><div class="leaderboard-list" id="leaderboard" aria-live="polite"><p class="muted small-copy">正在读取成绩…</p></div></section>
+        <section class="side-panel"><h2>💡 小提示</h2><p>先寻找数字 1 和 2 周围的边缘格；不确定时先标记，再根据相邻数字逐步排除。</p></section>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>© <span data-year></span> GameVault</span><div class="footer-links"><a href="../../index.html#games">其他游戏</a><a href="../../index.html">首页</a></div></div></footer>
+</body>
+</html>

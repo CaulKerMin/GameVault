@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d17">
+  <meta name="description" content="GameVault — 随时开玩，收藏你的高分。免费体验贪吃蛇、2048 和扫雷。">
+  <title>GameVault — 你的轻量游戏空间</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/common.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="GameVault 首页">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>GameVault<small>PLAY YOUR WAY</small></span>
+      </a>
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#games" aria-current="page">游戏库</a>
+        <a href="#features">平台特色</a>
+        <a href="#records">我的记录</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-button" type="button" data-theme-toggle aria-label="切换主题">☼</button>
+        <a class="button button-primary" href="#games">开始游戏 <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div>
+        <span class="eyebrow"><span class="eyebrow-dot"></span> 轻松开玩 · 即点即玩</span>
+        <h1>把快乐装进<br><span class="gradient-text">你的游戏空间。</span></h1>
+        <p class="hero-copy">不用下载，也不必等待。挑一款喜欢的小游戏，随时开始挑战自己的下一项纪录。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#games">探索游戏库 <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="#features">了解 GameVault</a>
+        </div>
+        <div class="hero-footnote">
+          <span class="avatar-stack" aria-hidden="true"><span>🐍</span><span>🔢</span><span>💣</span></span>
+          <span>3 款经典小游戏 · 免费 · 适配移动端</span>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit"></div>
+        <div class="hero-console">
+          <div class="console-top"><span>GAMEVAULT / ARCADE</span><span class="console-status">READY TO PLAY</span></div>
+          <div class="console-grid">
+            <div class="console-tile active">🐍</div><div class="console-tile">🔢</div><div class="console-tile active">💠</div>
+            <div class="console-tile">🟣</div><div class="console-tile active">🎮</div><div class="console-tile">💣</div>
+            <div class="console-tile active">✨</div><div class="console-tile">🟦</div><div class="console-tile active">🏆</div>
+          </div>
+          <div class="console-bottom"><span>YOUR NEXT HIGH SCORE</span><span class="console-progress"><span></span></span></div>
+        </div>
+        <div class="float-chip top">🏆 <span>新的纪录，等你刷新</span></div>
+        <div class="float-chip bottom">⚡ <span>即开即玩</span> <strong>100%</strong></div>
+      </div>
+    </section>
+
+    <section class="container stats-strip" aria-label="平台概览">
+      <div class="stat-item"><span class="stat-icon">🎮</span><div><strong>03</strong><span>精选经典游戏</span></div></div>
+      <div class="stat-item"><span class="stat-icon">⚡</span><div><strong>0 秒</strong><span>无需安装等待</span></div></div>
+      <div class="stat-item"><span class="stat-icon">📈</span><div><strong data-total-plays>0</strong><span>本设备累计开局</span></div></div>
+    </section>
+
+    <section class="container" id="games">
+      <div class="section-heading">
+        <div><h2>选择你的下一局</h2><p>熟悉的玩法，轻松上手，每一局都有新挑战。</p></div>
+        <div class="game-tools">
+          <label class="search-box"><span aria-hidden="true">⌕</span><input type="search" data-game-search placeholder="搜索游戏…" aria-label="搜索游戏"></label>
+        </div>
+      </div>
+      <div class="game-grid">
+        <a class="game-card" href="games/snake/index.html" data-game-card="snake 贪吃蛇 arcade 反应" data-last-game="snake" style="--card-glow:rgba(112,225,177,.16);--card-art:linear-gradient(145deg,#1d765f,#17473f)">
+          <div class="game-card-top"><span class="game-art">🐍</span><span class="game-badge">ARCADE · 街机</span></div>
+          <h3>贪吃蛇 <span aria-hidden="true">↗</span></h3>
+          <p>控制蛇身吃下能量点，越长越要小心。别撞到边界，也别追上自己。</p>
+          <div class="game-card-bottom"><span class="game-meta">方向键 / WASD <span class="dot"></span> 反应挑战</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+        <a class="game-card" href="games/2048/index.html" data-game-card="2048 puzzle 数字 合并 策略" data-last-game="2048" style="--card-glow:rgba(155,140,255,.19);--card-art:linear-gradient(145deg,#6e5ce0,#3c367f)">
+          <div class="game-card-top"><span class="game-art">🔢</span><span class="game-badge">PUZZLE · 益智</span></div>
+          <h3>2048 <span aria-hidden="true">↗</span></h3>
+          <p>滑动数字方块，让相同数字合并。规划每一步，挑战更高分数。</p>
+          <div class="game-card-bottom"><span class="game-meta">方向键 / 滑动 <span class="dot"></span> 逻辑策略</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+        <a class="game-card" href="games/minesweeper/index.html" data-game-card="minesweeper 扫雷 logic 逻辑 经典" data-last-game="minesweeper" style="--card-glow:rgba(255,184,107,.17);--card-art:linear-gradient(145deg,#a7652b,#684027)">
+          <div class="game-card-top"><span class="game-art">💣</span><span class="game-badge">LOGIC · 逻辑</span></div>
+          <h3>扫雷 <span aria-hidden="true">↗</span></h3>
+          <p>用数字推理雷区位置，标记危险地块。第一步有保护，放心开始。</p>
+          <div class="game-card-bottom"><span class="game-meta">点击 / 右键标旗 <span class="dot"></span> 推理挑战</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+      </div>
+      <p class="empty-state" data-empty-state hidden>没有找到匹配的游戏，试试其他关键词。</p>
+      <div style="margin-top:17px"><a class="button button-quiet button-small" href="games/snake/index.html" data-recent-game hidden>继续上次游戏 →</a></div>
+    </section>
+
+    <section class="container content-columns" id="features">
+      <div class="info-panel">
+        <h2>轻量，但不将就。</h2>
+        <p>GameVault 为快速开局而设计：界面清爽，操作直观，桌面和手机都能玩。</p>
+        <div class="feature-list">
+          <div class="feature"><span class="feature-icon">📱</span><div><strong>自适应布局</strong><span>手机、平板和桌面端都好用。</span></div></div>
+          <div class="feature"><span class="feature-icon">💾</span><div><strong>自动保存记录</strong><span>本机高分和开局次数自动记住。</span></div></div>
+          <div class="feature"><span class="feature-icon">⌨️</span><div><strong>键盘与触控</strong><span>按键、方向控制和触屏操作兼顾。</span></div></div>
+          <div class="feature"><span class="feature-icon">🔌</span><div><strong>可选排行榜 API</strong><span>接入后端后即可共享成绩。</span></div></div>
+        </div>
+      </div>
+      <div class="info-panel" id="records">
+        <h2>近期高分</h2>
+        <p>优先显示服务端排行榜；离线时展示本设备保存的成绩。</p>
+        <div data-home-leaderboard aria-live="polite"><p class="muted small-copy">正在读取记录…</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><span>© <span data-year></span> GameVault. 为快乐留一个位置。</span><div class="footer-links"><a href="#features">关于本站</a><a href="#games">返回游戏库 ↑</a></div></div></footer>
+</body>
+</html>

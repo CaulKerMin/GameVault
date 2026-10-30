@@ -1,0 +1,5 @@
+node_modules/
+backend/data/leaderboard.json
+backend/data/*.tmp
+.DS_Store
+.env

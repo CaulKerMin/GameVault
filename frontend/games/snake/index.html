@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d17"><meta name="description" content="玩贪吃蛇小游戏，挑战你的最高分。">
+  <title>贪吃蛇 — GameVault</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <script src="../../assets/js/config.js" defer></script><script src="../../assets/js/api.js" defer></script><script src="../../assets/js/common.js" defer></script><script src="logic.js" defer></script><script src="game.js" defer></script>
+</head>
+<body data-game="snake">
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true">✦</span><span>GameVault<small>PLAY YOUR WAY</small></span></a>
+    <nav class="nav-links" aria-label="主导航"><a href="../../index.html#games">游戏库</a><a href="../../index.html#features">平台特色</a></nav>
+    <div class="header-actions"><button class="icon-button" type="button" data-theme-toggle aria-label="切换主题">☼</button><a class="button button-secondary" href="../../index.html">← 返回首页</a></div>
+  </div></header>
+  <main class="container game-page">
+    <div class="breadcrumbs"><a href="../../index.html">首页</a><span>/</span><a href="../../index.html#games">游戏库</a><span>/</span><span>贪吃蛇</span></div>
+    <div class="game-page-heading"><div><span class="eyebrow">🐍 ARCADE · 街机经典</span><h1>贪吃蛇</h1><p>吃下能量点不断成长，但别撞墙，也别撞上自己的身体。</p></div><button class="button button-primary" id="start-button" type="button">开始游戏 <span aria-hidden="true">→</span></button></div>
+    <div class="game-layout">
+      <section class="game-main-panel" aria-label="贪吃蛇游戏区域">
+        <div class="panel-topline"><h2>游戏区域</h2><span class="status-pill" id="status-pill" data-state="ready">准备开始</span></div>
+        <div class="game-stats">
+          <div class="game-stat"><span>本局得分</span><strong id="score">0</strong></div>
+          <div class="game-stat"><span>个人最高分</span><strong id="best-score">0</strong></div>
+          <div class="game-stat"><span>蛇身长度</span><strong id="length">3</strong></div>
+        </div>
+        <div class="board-stage"><div class="canvas-wrap"><canvas id="snake-canvas" width="400" height="400" tabindex="0" aria-label="贪吃蛇游戏画布，使用方向键或 WASD 控制"></canvas></div><div class="board-overlay" id="game-overlay"><div class="overlay-card"><h3 id="overlay-title">准备好了吗？</h3><p id="overlay-copy">点击开始，使用方向键或 WASD 控制蛇的移动。</p><button class="button button-primary" id="overlay-start" type="button">开始这一局</button></div></div></div>
+        <div class="game-controls"><button class="button button-primary" id="restart-button" type="button">↻ 重新开始</button><button class="button button-secondary" id="pause-button" type="button" disabled>Ⅱ 暂停</button></div>
+        <div class="dpad" aria-label="触屏方向控制"><button type="button" data-dir="up" aria-label="向上">↑</button><button type="button" data-dir="left" aria-label="向左">←</button><button type="button" data-dir="down" aria-label="向下">↓</button><button type="button" data-dir="right" aria-label="向右">→</button></div>
+        <div class="game-instructions"><span class="instruction-icon">⌨️</span><div><strong>操作方式</strong><br>方向键或 WASD 移动，空格键暂停。手机可使用下方方向按钮。</div></div>
+      </section>
+      <aside>
+        <section class="side-panel"><h2>🏆 排行榜</h2><p>按本局得分排序，最高分优先。</p><div class="leaderboard-list" id="leaderboard" aria-live="polite"><p class="muted small-copy">正在读取成绩…</p></div></section>
+        <section class="side-panel"><h2>💡 小提示</h2><p>别急着追食物。给蛇留出转弯空间，越长越要提前规划路线。</p></section>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>© <span data-year></span> GameVault</span><div class="footer-links"><a href="../../index.html#games">其他游戏</a><a href="../../index.html">首页</a></div></div></footer>
+</body>
+</html>
