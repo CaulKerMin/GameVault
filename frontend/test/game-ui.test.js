@@ -58,3 +58,20 @@ test('game interaction details respect reduced-motion preferences', () => {
   assert.match(stage4Css, /:focus-visible|focus-visible/);
   assert.match(stage4Css, /@media \(prefers-reduced-motion: reduce\)/);
 });
+
+
+test('game-page home navigation labels do not include a decorative left arrow', () => {
+  for (const page of gamePages) {
+    assert.match(page, />返回首页<\/a>/);
+    assert.doesNotMatch(page, />← 返回首页<\/a>/);
+  }
+});
+
+test('2048 desktop first view is vertically centered and sized to fit the viewport', () => {
+  assert.match(stage4Css, /@media \(min-width: 821px\)/);
+  assert.match(stage4Css, /body\[data-game="2048"\]\s*\{[^}]*min-height:100svh;[^}]*display:flex/s);
+  assert.match(stage4Css, /body\[data-game="2048"\] > \.game-page\s*\{[^}]*justify-content:center/s);
+  assert.match(stage4Css, /body\[data-game="2048"\] \.puzzle-wrap\s*\{[^}]*calc\(100svh - 525px\)/s);
+  assert.match(stage4Css, /@media \(min-width: 821px\) and \(max-height: 760px\)/);
+  assert.match(stage4Css, /body\[data-game="2048"\] \.game-instructions\s*\{\s*display:none;/);
+});
