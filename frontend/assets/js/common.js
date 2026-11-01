@@ -48,7 +48,9 @@
       minesweeper: { label: "继续扫雷", href: "games/minesweeper/index.html" }
     };
     if (destinations[recent]) {
-      recentNode.textContent = destinations[recent].label;
+      const recentTitle = recentNode.querySelector("[data-recent-game-title]");
+      if (recentTitle) recentTitle.textContent = destinations[recent].label;
+      else recentNode.textContent = destinations[recent].label;
       recentNode.href = destinations[recent].href;
       recentNode.hidden = false;
     }

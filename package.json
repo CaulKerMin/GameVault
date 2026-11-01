@@ -1,6 +1,6 @@
 {
   "name": "gamevault-a",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "private": true,
   "description": "GameVault — GitHub Pages-ready browser game hub with automated Actions deployment and full-source packaging.",
   "scripts": {
