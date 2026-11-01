@@ -1,8 +1,8 @@
 {
   "name": "gamevault-a",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "private": true,
-  "description": "GameVault — responsive browser game hub with refined in-game layouts, accessible controls, local/shared leaderboards, automated Pages deployment and full-source packaging.",
+  "description": "GameVault — responsive browser game hub with viewport-fitted 2048 play layout, accessible controls, local/shared leaderboards, automated Pages deployment and full-source packaging.",
   "scripts": {
     "dev": "node scripts/dev.js",
     "dev:web": "node frontend/dev-server.js",
