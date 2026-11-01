@@ -1,4 +1,4 @@
-# GameVault · v2.5.1
+# GameVault · v2.5.2
 
 一个轻量、响应式的浏览器小游戏站点，包含 **贪吃蛇、2048、扫雷**。前端与排行榜 API 已分离：前端可以独立部署到 GitHub Pages；GitHub Actions 会自动运行测试、发布静态前端，并生成可下载的完整项目 ZIP。
 
@@ -6,7 +6,7 @@
 
 **你不需要在自己的电脑上安装 Node.js 或运行项目。** 将项目文件上传到 GitHub 后，GitHub Actions 会在云端完成检查、打包和 GitHub Pages 发布。你只需要使用浏览器管理 GitHub 仓库。
 
-- 当前版本：**v2.5.1 · GitHub Pages 自动部署版**。
+- 当前版本：**v2.5.2 · GitHub Pages 自动部署版**。
 - 每次向 `main` 或 `master` 分支 Push，都会自动运行测试与发布检查。
 - 检查通过后，Actions 自动将 `frontend/` 发布到 GitHub Pages。
 - 同一次工作流还会生成完整项目 ZIP，包含前端、后端、测试、配置、文档和 Actions 工作流。
@@ -20,6 +20,7 @@
 frontend/                    静态前端，GitHub Pages 实际发布目录
   index.html
   assets/css/styles.css      主题、布局与响应式样式
+  assets/css/home-stage2.css 首页卡片、最近游玩与排行榜视觉增强
   assets/js/                 API 适配、主题与首页交互
   games/                     三款独立小游戏
   .nojekyll                  禁用 Pages 的 Jekyll 处理
@@ -37,6 +38,8 @@ README.md                    项目说明
 GITHUB-PAGES-CHECKLIST.md    GitHub 网页部署检查清单
 STAGE5-REPORT.md             前一阶段改造与验证报告
 UI-STAGE1-REPORT.md           首页布局与视觉基础修复报告
+UI-STAGE2-REPORT.md           首页游戏卡片、排行榜与最近游玩优化报告
+UI-ROADMAP.md                 UI 专项迭代路线图
 ```
 
 ## 一、通过 GitHub 网页部署（无需本机运行）
@@ -50,7 +53,7 @@ UI-STAGE1-REPORT.md           首页布局与视觉基础修复报告
 
 ### 第 2 步：上传项目文件
 
-1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.5.1`）。
+1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.5.2`）。
 2. 打开解压后出现的项目文件夹。
 3. 在 GitHub 仓库页面选择 `Add file` → `Upload files`。
 4. 将项目文件夹**里面的所有文件和目录**拖入上传区域，包括隐藏目录 `.github/`、隐藏文件 `.nojekyll` 和 `.gitignore`；不要只上传 ZIP 文件本身，也不要把整个项目文件夹作为一个子目录上传。
@@ -78,7 +81,7 @@ UI-STAGE1-REPORT.md           首页布局与视觉基础修复报告
 
 1. 打开仓库 `Actions`。
 2. 点击最新一次成功的 `GameVault · GitHub Pages 部署与完整源码打包` 运行记录。
-3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.5.1-full-project`。
+3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.5.2-full-project`。
 4. 下载内容包含完整项目 ZIP 和 `.sha256` 校验文件，默认保留 **90 天**。每次部署都会生成新的版本包。
 
 你也可以在 `Actions` → 选择该工作流 → `Run workflow`，手动触发一次检查、打包和部署。

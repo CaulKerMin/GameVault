@@ -1,8 +1,8 @@
 {
   "name": "gamevault-a",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "private": true,
-  "description": "GameVault — GitHub Pages-ready browser game hub with automated Actions deployment and full-source packaging.",
+  "description": "GameVault — polished browser game hub with responsive homepage, local/shared leaderboards, automated Pages deployment and full-source packaging.",
   "scripts": {
     "dev": "node scripts/dev.js",
     "dev:web": "node frontend/dev-server.js",

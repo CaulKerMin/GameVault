@@ -7,6 +7,7 @@
   <meta name="description" content="GameVault — 随时开玩，收藏你的高分。免费体验贪吃蛇、2048 和扫雷。">
   <title>GameVault — 你的轻量游戏空间</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/home-stage2.css">
   <script src="assets/js/config.js" defer></script>
   <script src="assets/js/api.js" defer></script>
   <script src="assets/js/common.js" defer></script>
@@ -75,31 +76,38 @@
         </div>
       </div>
       <div class="game-grid">
-        <a class="game-card" href="games/snake/index.html" data-game-card="snake 贪吃蛇 arcade 反应" data-last-game="snake" style="--card-glow:rgba(112,225,177,.16);--card-art:linear-gradient(145deg,#1d765f,#17473f)">
-          <div class="game-card-top"><span class="game-art">🐍</span><span class="game-badge">ARCADE · 街机</span></div>
-          <h3>贪吃蛇 <span aria-hidden="true">↗</span></h3>
+        <a class="game-card" href="games/snake/index.html" data-game-card="snake 贪吃蛇 arcade 反应" data-last-game="snake" style="--card-glow:rgba(112,225,177,.18);--card-art:linear-gradient(145deg,#1d765f,#17473f);--card-accent:#70e1b1">
+          <div class="game-card-top"><span class="game-art" aria-hidden="true">🐍</span><span class="game-badge">ARCADE <span class="game-badge-local">街机</span></span></div>
+          <h3>贪吃蛇</h3>
           <p>控制蛇身吃下能量点，越长越要小心。别撞到边界，也别追上自己。</p>
-          <div class="game-card-bottom"><span class="game-meta">方向键 / WASD <span class="dot"></span> 反应挑战</span><span class="card-arrow" aria-hidden="true">→</span></div>
+          <div class="game-card-bottom"><span class="game-meta"><span>方向键 / WASD</span><span class="dot"></span><span>反应挑战</span></span><span class="card-action"><span>立即开玩</span><span class="card-arrow" aria-hidden="true">→</span></span></div>
         </a>
-        <a class="game-card" href="games/2048/index.html" data-game-card="2048 puzzle 数字 合并 策略" data-last-game="2048" style="--card-glow:rgba(155,140,255,.19);--card-art:linear-gradient(145deg,#6e5ce0,#3c367f)">
-          <div class="game-card-top"><span class="game-art">🔢</span><span class="game-badge">PUZZLE · 益智</span></div>
-          <h3>2048 <span aria-hidden="true">↗</span></h3>
+        <a class="game-card" href="games/2048/index.html" data-game-card="2048 puzzle 数字 合并 策略" data-last-game="2048" style="--card-glow:rgba(155,140,255,.2);--card-art:linear-gradient(145deg,#6e5ce0,#3c367f);--card-accent:#a99aff">
+          <div class="game-card-top"><span class="game-art" aria-hidden="true">🔢</span><span class="game-badge">PUZZLE <span class="game-badge-local">益智</span></span></div>
+          <h3>2048</h3>
           <p>滑动数字方块，让相同数字合并。规划每一步，挑战更高分数。</p>
-          <div class="game-card-bottom"><span class="game-meta">方向键 / 滑动 <span class="dot"></span> 逻辑策略</span><span class="card-arrow" aria-hidden="true">→</span></div>
+          <div class="game-card-bottom"><span class="game-meta"><span>方向键 / 滑动</span><span class="dot"></span><span>逻辑策略</span></span><span class="card-action"><span>立即开玩</span><span class="card-arrow" aria-hidden="true">→</span></span></div>
         </a>
-        <a class="game-card" href="games/minesweeper/index.html" data-game-card="minesweeper 扫雷 logic 逻辑 经典" data-last-game="minesweeper" style="--card-glow:rgba(255,184,107,.17);--card-art:linear-gradient(145deg,#a7652b,#684027)">
-          <div class="game-card-top"><span class="game-art">💣</span><span class="game-badge">LOGIC · 逻辑</span></div>
-          <h3>扫雷 <span aria-hidden="true">↗</span></h3>
+        <a class="game-card" href="games/minesweeper/index.html" data-game-card="minesweeper 扫雷 logic 逻辑 经典" data-last-game="minesweeper" style="--card-glow:rgba(255,184,107,.18);--card-art:linear-gradient(145deg,#a7652b,#684027);--card-accent:#ffbd78">
+          <div class="game-card-top"><span class="game-art" aria-hidden="true">💣</span><span class="game-badge">LOGIC <span class="game-badge-local">逻辑</span></span></div>
+          <h3>扫雷</h3>
           <p>用数字推理雷区位置，标记危险地块。第一步有保护，放心开始。</p>
-          <div class="game-card-bottom"><span class="game-meta">点击 / 右键标旗 <span class="dot"></span> 推理挑战</span><span class="card-arrow" aria-hidden="true">→</span></div>
+          <div class="game-card-bottom"><span class="game-meta"><span>点击 / 右键标旗</span><span class="dot"></span><span>推理挑战</span></span><span class="card-action"><span>立即开玩</span><span class="card-arrow" aria-hidden="true">→</span></span></div>
         </a>
       </div>
       <p class="empty-state" data-empty-state hidden>没有找到匹配的游戏，试试其他关键词。</p>
-      <div class="recent-game-wrap">
-        <a class="recent-game-card" href="games/snake/index.html" data-recent-game hidden>
-          <span class="recent-game-icon" aria-hidden="true">↻</span>
-          <span class="recent-game-copy"><strong data-recent-game-title>继续上次游戏</strong><small>回到上次游玩的游戏</small></span>
-          <span class="recent-game-arrow" aria-hidden="true">→</span>
+      <div class="recent-game-wrap" data-recent-wrap hidden>
+        <div class="recent-game-heading">
+          <span class="recent-game-kicker">RECENTLY PLAYED</span>
+          <span>上次玩到这里</span>
+        </div>
+        <a class="recent-game-card" href="games/snake/index.html" data-recent-game>
+          <span class="recent-game-icon" data-recent-game-icon aria-hidden="true">↻</span>
+          <span class="recent-game-copy">
+            <strong data-recent-game-title>继续上次游戏</strong>
+            <small data-recent-game-time>回到上次游玩的游戏</small>
+          </span>
+          <span class="recent-game-action">继续游戏 <span aria-hidden="true">→</span></span>
         </a>
       </div>
     </section>
@@ -117,8 +125,8 @@
       </div>
       <div class="info-panel" id="records">
         <h2>近期高分</h2>
-        <p>优先显示服务端排行榜；离线时展示本设备保存的成绩。</p>
-        <div data-home-leaderboard aria-live="polite"><p class="muted small-copy">正在读取记录…</p></div>
+        <p>每款游戏展示前三名；服务端不可用时自动回退到本机记录。</p>
+        <div class="home-leaderboard" data-home-leaderboard aria-live="polite" aria-busy="true"><p class="muted small-copy">正在读取记录…</p></div>
       </div>
     </section>
   </main>

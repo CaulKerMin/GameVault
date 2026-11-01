@@ -39,74 +39,157 @@
   if (playsNode) playsNode.textContent = String(window.GameVaultApi?.getPlayStats().total || 0);
 
   const recentNode = document.querySelector("[data-recent-game]");
-  if (recentNode) {
+  const recentWrap = document.querySelector("[data-recent-wrap]");
+  if (recentNode && recentWrap) {
     let recent = "";
-    try { recent = localStorage.getItem("gamevault.lastGame") || ""; } catch { /* optional */ }
+    let recentAt = "";
+    try {
+      recent = localStorage.getItem("gamevault.lastGame") || "";
+      recentAt = localStorage.getItem("gamevault.lastGameAt") || "";
+    } catch { /* optional storage */ }
     const destinations = {
-      snake: { label: "继续贪吃蛇", href: "games/snake/index.html" },
-      "2048": { label: "继续挑战 2048", href: "games/2048/index.html" },
-      minesweeper: { label: "继续扫雷", href: "games/minesweeper/index.html" }
+      snake: { label: "继续贪吃蛇", href: "games/snake/index.html", icon: "🐍", className: "is-snake" },
+      "2048": { label: "继续挑战 2048", href: "games/2048/index.html", icon: "🔢", className: "is-2048" },
+      minesweeper: { label: "继续扫雷", href: "games/minesweeper/index.html", icon: "💣", className: "is-minesweeper" }
     };
-    if (destinations[recent]) {
+    const destination = destinations[recent];
+    if (destination) {
       const recentTitle = recentNode.querySelector("[data-recent-game-title]");
-      if (recentTitle) recentTitle.textContent = destinations[recent].label;
-      else recentNode.textContent = destinations[recent].label;
-      recentNode.href = destinations[recent].href;
-      recentNode.hidden = false;
+      const recentIcon = recentNode.querySelector("[data-recent-game-icon]");
+      const recentTime = recentNode.querySelector("[data-recent-game-time]");
+      if (recentTitle) recentTitle.textContent = destination.label;
+      if (recentIcon) {
+        recentIcon.textContent = destination.icon;
+        recentIcon.classList.add(destination.className);
+      }
+      if (recentTime) {
+        const date = new Date(recentAt);
+        if (recentAt && Number.isFinite(date.getTime())) {
+          const clock = date.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+          const today = new Date();
+          const yesterday = new Date(today);
+          yesterday.setDate(today.getDate() - 1);
+          const dayLabel = date.toDateString() === today.toDateString()
+            ? "今天"
+            : date.toDateString() === yesterday.toDateString()
+              ? "昨天"
+              : date.toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" });
+          recentTime.textContent = `上次游玩：${dayLabel} ${clock}`;
+        } else {
+          recentTime.textContent = "回到上次游玩的游戏，继续挑战新纪录";
+        }
+      }
+      recentNode.href = destination.href;
+      recentNode.addEventListener("click", () => {
+        try {
+          localStorage.setItem("gamevault.lastGame", recent);
+          localStorage.setItem("gamevault.lastGameAt", new Date().toISOString());
+        } catch { /* optional storage */ }
+      });
+      recentWrap.hidden = false;
     }
   }
 
   const leaderboard = document.querySelector("[data-home-leaderboard]");
   if (leaderboard && window.GameVaultApi) {
-    const gameNames = { snake: "贪吃蛇", "2048": "2048", minesweeper: "扫雷" };
-    Promise.all(Object.keys(gameNames).map(async (game) => ({
+    const gameMeta = {
+      snake: { label: "贪吃蛇", icon: "🐍" },
+      "2048": { label: "2048", icon: "🔢" },
+      minesweeper: { label: "扫雷", icon: "💣" }
+    };
+    const appendStatus = (mode, pending = 0) => {
+      const status = document.createElement("div");
+      status.className = `leaderboard-status is-${mode}`;
+      status.setAttribute("role", "status");
+      const dot = document.createElement("span");
+      dot.className = "leaderboard-status-dot";
+      dot.setAttribute("aria-hidden", "true");
+      const copy = document.createElement("span");
+      copy.textContent = mode === "server"
+        ? `共享排行榜已连接${pending ? ` · ${pending} 条记录待同步` : ""}`
+        : mode === "offline"
+          ? `API 暂不可用，当前显示本机记录${pending ? ` · ${pending} 条待同步` : ""}`
+          : "当前显示本机记录 · 配置 API 后可跨设备共享";
+      status.append(dot, copy);
+      leaderboard.append(status);
+    };
+    const showEmpty = (title, description) => {
+      const empty = document.createElement("div");
+      empty.className = "leaderboard-empty";
+      const icon = document.createElement("span");
+      icon.className = "leaderboard-empty-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "🏆";
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+      const copy = document.createElement("p");
+      copy.textContent = description;
+      empty.append(icon, heading, copy);
+      leaderboard.append(empty);
+    };
+
+    Promise.all(Object.keys(gameMeta).map(async (game) => ({
       game,
       entries: await window.GameVaultApi.getLeaderboard(game, 3)
     }))).then((groups) => {
       leaderboard.replaceChildren();
       const syncStatus = window.GameVaultApi.getSyncStatus?.();
-      const statusNote = document.createElement("p");
-      statusNote.className = "muted small-copy";
-      statusNote.textContent = syncStatus?.mode === "server"
-        ? `共享排行榜已连接${syncStatus.pending ? `，${syncStatus.pending} 条记录待同步` : ""}`
-        : syncStatus?.mode === "offline"
-          ? `排行榜 API 暂不可用，正在显示本机记录${syncStatus.pending ? `（${syncStatus.pending} 条待同步）` : ""}`
-          : "本机排行榜；部署并配置 API 后可跨设备共享成绩";
-      leaderboard.append(statusNote);
+      const mode = syncStatus?.mode === "server" ? "server" : syncStatus?.mode === "offline" ? "offline" : "local";
+      appendStatus(mode, syncStatus?.pending || 0);
       const any = groups.some((group) => group.entries.length);
       if (!any) {
-        const empty = document.createElement("p");
-        empty.className = "muted small-copy";
-        empty.textContent = "开始一局游戏，你的成绩就会显示在这里。";
-        leaderboard.append(empty);
+        showEmpty("还没有成绩", "完成一局游戏，你的最佳成绩就会出现在这里。 ");
         return;
       }
       groups.forEach(({ game, entries }) => {
         if (!entries.length) return;
         const section = document.createElement("section");
         section.className = "mini-leaderboard-group";
+        const header = document.createElement("div");
+        header.className = "leaderboard-group-heading";
+        const gameIcon = document.createElement("span");
+        gameIcon.className = "leaderboard-game-icon";
+        gameIcon.setAttribute("aria-hidden", "true");
+        gameIcon.textContent = gameMeta[game].icon;
         const heading = document.createElement("h3");
-        heading.textContent = gameNames[game];
-        section.append(heading);
+        heading.textContent = gameMeta[game].label;
+        const tag = document.createElement("span");
+        tag.className = "leaderboard-group-tag";
+        tag.textContent = "TOP 3";
+        header.append(gameIcon, heading, tag);
+        section.append(header);
         entries.forEach((entry, index) => {
           const row = document.createElement("div");
-          row.className = "leaderboard-row";
+          row.className = `leaderboard-row rank-${index + 1}`;
+          const rank = document.createElement("span");
+          rank.className = "leaderboard-rank";
+          rank.textContent = String(index + 1).padStart(2, "0");
           const name = document.createElement("span");
-          name.textContent = `${index + 1}. ${entry.name || "匿名玩家"}`;
+          name.className = "leaderboard-player";
+          name.textContent = entry.name || "匿名玩家";
           const score = document.createElement("strong");
-          score.textContent = Number(entry.score || 0).toLocaleString("zh-CN");
-          row.append(name, score);
+          score.className = "leaderboard-score";
+          const numericScore = Number(entry.score);
+          score.textContent = (Number.isFinite(numericScore) ? numericScore : 0).toLocalString("zh-CN");
+          row.append(rank, name, score);
           section.append(row);
         });
         leaderboard.append(section);
       });
-    });
+    }).catch(() => {
+      leaderboard.replaceChildren();
+      appendStatus("offline");
+      showEmpty("曉新当查看我本录", "你的游戏设到帮连处记，请得去后分也回看查解來检示-资用，方式上同收到成");
+    }).finally(() => leaderboard.setAttribute("aria-busy", "false"));
   }
 
   document.querySelectorAll("[data-last-game]").forEach((node) => {
     node.addEventListener("click", () => {
       const game = node.dataset.lastGame;
-      try { localStorage.setItem("gamevault.lastGame", game); } catch { /* optional */ }
+      try {
+        localStorage.setItem("gamevault.lastGame", game);
+        localStorage.setItem("gamevault.lastGameAt", new Date().toISOString());
+      } catch { /* optional */ }
     });
   });
 })();
