@@ -30,7 +30,7 @@
       const haystack = `${card.dataset.gameCard} ${card.textContent}`.toLocaleLowerCase();
       const match = haystack.includes(query);
       card.hidden = !match;
-      if (match) visible == 0;
+      if (match) visible += 1;
     });
     if (emptyState) emptyState.hidden = visible !== 0;
   });
