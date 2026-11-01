@@ -61,12 +61,12 @@ test('stage-three responsive stylesheet is loaded on the homepage and all game p
 });
 
 test('stage-three compact layouts prevent narrow-screen content from forcing overflow', () => {
-  assert.match(stage3Css, /@media \(max-width: 480px\)/);
+  assert.match(stage3Css, /@media \(max-width:\s*480px\)/);
   assert.match(stage3Css, /\.stats-strip\s*\{[^}]*grid-template-columns:\s*minmax\(0,1fr\)/s);
   assert.match(stage3Css, /\.game-card-bottom\s*\{[^}]*flex-wrap:\s*wrap/s);
   assert.match(stage3Css, /\.game-meta\s*\{[^}]*min-width:\s*0/s);
   assert.match(stage3Css, /overflow-wrap:\s*anywhere/);
-  assert.match(stage3Css, /@media \(max-width: 380px\)/);
+  assert.match(stage3Css, /@media \(max-width:\s*380px\)/);
 });
 
 test('stage-three touch targets and keyboard focus have consistent affordances', () => {
