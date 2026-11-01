@@ -67,11 +67,22 @@ test('game-page home navigation labels do not include a decorative left arrow', 
   }
 });
 
-test('2048 desktop first view is vertically centered and sized to fit the viewport', () => {
-  assert.match(stage4Css, /@media \(min-width: 821px\)/);
-  assert.match(stage4Css, /body\[data-game="2048"\]\s*\{[^}]*min-height:100svh;[^}]*display:flex/s);
-  assert.match(stage4Css, /body\[data-game="2048"\] > \.game-page\s*\{[^}]*justify-content:center/s);
-  assert.match(stage4Css, /body\[data-game="2048"\] \.puzzle-wrap\s*\{[^}]*calc\(100svh - 525px\)/s);
-  assert.match(stage4Css, /@media \(min-width: 821px\) and \(max-height: 760px\)/);
-  assert.match(stage4Css, /body\[data-game="2048"\] \.game-instructions\s*\{\s*display:none;/);
+test('all three game pages load a cache-versioned shared game stylesheet', () => {
+  for (const [index, game] of ['snake', '2048', 'minesweeper'].entries()) {
+    assert.match(gamePages[index], new RegExp('data-game="' + game + '"'));
+    assert.match(gamePages[index], /responsive-stage3\.css[\s\S]*game-stage4\.css\?v=2\.6\.2/);
+  }
 });
+
+test('all three game pages share a centered, viewport-fitted desktop first view', () => {
+  assert.match(stage4Css, /@media \(min-width: 821px\)/);
+  assert.match(stage4Css, /body\[data-game\]\s*\{[^}]*min-height:\s*100svh;[^}]*display:\s*flex/s);
+  assert.match(stage4Css, /body\[data-game\]\s*>\s*\.game-page\s*\{[^}]*justify-content:\s*center/s);
+  assert.match(stage4Css, /body\[data-game\]\s+\.game-layout\s*\{[^}]*align-items:\s*center/s);
+  assert.match(stage4Css, /body\[data-game\]\s+\.board-stage,[\s\S]*?width:\s*min\(100%,\s*clamp\(220px,\s*calc\(100svh - 660px\),\s*360px\)\)/);
+  assert.match(stage4Css, /body\[data-game\]\s+\.puzzle-wrap/);
+  assert.match(stage4Css, /body\[data-game\]\s+\.mine-board-wrap/);
+  assert.match(stage4Css, /@media \(min-width: 821px\) and \(max-height: 760px\)/);
+  assert.match(stage4Css, /body\[data-game\]\s+\.game-instructions\s*\{\s*display:\s*none;/);
+});
+
