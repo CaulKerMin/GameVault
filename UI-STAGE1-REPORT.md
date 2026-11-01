@@ -19,9 +19,11 @@
 - `package.json`
 - `README.md`
 - `CHANGELOG.md`
+- `.github/workflows/pages.yml`（生成可移植的 SHA-256 校验文件）
 
 ## 验收边界
 
 - GitHub Actions 负责执行项目现有的 `npm test` 与 `npm run verify:release`，并在通过后生成完整源码 ZIP、SHA-256 校验文件及发布 GitHub Pages。
+- ZIP 的 SHA-256 校验文件使用压缩包文件名作为相对路径，下载后可在本地目录直接运行 `sha256sum -c GameVault-v2.5.1-full-project.zip.sha256`。
 - 本报告不把自动化测试等同于真实浏览器视觉回归；最终仍应在桌面端和手机端检查布局、悬浮元素和最近游玩入口。
 - 本阶段不改动贪吃蛇、2048、扫雷的核心逻辑，也不更改 API 或排行榜数据协议。

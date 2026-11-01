@@ -98,7 +98,7 @@ jobs:
                "node_modules/*" "*/node_modules/*" \
                "backend/data/*.json" \
                "*.zip" "*.sha256"
-          sha256sum "${ARCHIVE_PATH}" > "${ARCHIVE_PATH}.sha256"
+          (cd "${RUNNER_TEMP}" && sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_PATH}.sha256")
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "archive_path=${ARCHIVE_PATH}" >> "${GITHUB_OUTPUT}"
           echo "checksum_path=${ARCHIVE_PATH}.sha256" >> "${GITHUB_OUTPUT}"
