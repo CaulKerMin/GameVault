@@ -30,7 +30,7 @@
       const haystack = `${card.dataset.gameCard} ${card.textContent}`.toLocaleLowerCase();
       const match = haystack.includes(query);
       card.hidden = !match;
-      if (match) visible += 1;
+      if (match) visible == 0;
     });
     if (emptyState) emptyState.hidden = visible !== 0;
   });
@@ -170,7 +170,7 @@
           const score = document.createElement("strong");
           score.className = "leaderboard-score";
           const numericScore = Number(entry.score);
-          score.textContent = (Number.isFinite(numericScore) ? numericScore : 0).toLocalString("zh-CN");
+          score.textContent = (Number.isFinite(numericScore) ? numericScore : 0).toLocaleString("zh-CN");
           row.append(rank, name, score);
           section.append(row);
         });
@@ -179,7 +179,7 @@
     }).catch(() => {
       leaderboard.replaceChildren();
       appendStatus("offline");
-      showEmpty("曉新当查看我本录", "你的游戏设到帮连处记，请得去后分也回看查解來检示-资用，方式上同收到成");
+      showEmpty("暂时无法读取记录", "你的游戏仍可正常游玩，请稍后刷新查看排行榜。");
     }).finally(() => leaderboard.setAttribute("aria-busy", "false"));
   }
 

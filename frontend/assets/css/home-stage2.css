@@ -60,7 +60,7 @@
 .home-leaderboard .leaderboard-row.rank-1 .leaderboard-rank { background: color-mix(in srgb, #f3c969 18%, transparent); color: #e8bf5c; }
 .home-leaderboard .leaderboard-row.rank-2 .leaderboard-rank { background: color-mix(in srgb, #b7c2d8 17%, transparent); color: #b7c2d8; }
 .home-leaderboard .leaderboard-row.rank-3 .leaderboard-rank { background: color-mix(in srgb, #c58b68 18%, transparent); color: #d29a75; }
-.home-leaderboard.leaderboard-player { min-width: 0; overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
+.home-leaderboard .leaderboard-player { min-width: 0; overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
 .home-leaderboard .leaderboard-score { color: var(--text); font-size: .83rem; font-variant-numeric: tabular-nums; }
 .home-leaderboard .leaderboard-empty { display: grid; justify-items: center; gap: 5px; margin-top: 12px; padding: 21px 14px; border: 1px dashed var(--line); border-radius: 15px; background: color-mix(in srgb, var(--panel-solid) 38%, transparent); text-align: center; }
 .leaderboard-empty-icon { display: grid; place-items: center; width: 38px; height: 38px; margin-bottom: 3px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 13%, transparent); font-size: 1.15rem; }
@@ -68,4 +68,27 @@
 .leaderboard-empty p { max-width: 28ch; margin: 0; color: var(--muted); font-size: .73rem; line-height: 1.55; }
 :root[data-theme="light"] .home-leaderboard .leaderboard-row.rank-1 .leaderboard-rank { color: #8a6517; }
 :root[data-theme="light"] .home-leaderboard .leaderboard-row.rank-2 .leaderboard-rank { color: #68748e; }
-R$D
+:root[data-theme="light"] .home-leaderboard .leaderboard-row.rank-3 .leaderboard-rank { color: #91552f; }
+
+@media (max-width: 700px) {
+  .game-card { min-height: 258px; padding: 18px; }
+  .game-card:hover { transform: none; }
+  .game-card:active { transform: scale(.995); }
+  .game-card h3 { margin-top: 16px; }
+  .game-card-bottom { gap: 8px; padding-top: 18px; }
+  .game-meta { gap: 5px; font-size: .7rem; }
+  .card-action { gap: 6px; font-size: .7rem; }
+  .card-arrow { width: 32px; height: 32px; border-radius: 10px; }
+  .recent-game-wrap { margin-top: 18px; }
+  .recent-game-card { gap: 10px; padding: 12px; }
+  .recent-game-action { gap: 4px; font-size: .69rem; }
+  .content-columns .feature-list { gap: 14px; }
+  .content-columns .feature { padding: 8px; }
+}
+@media (max-width: 380px) {
+  .recent-game-action { font-size: 0; }
+  .recent-game-action span { font-size: 1.05rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-card, .game-art, .card-arrow, .recent-game-card, .recent-game-action span, .content-columns .feature { transition: none !important; }
+}
