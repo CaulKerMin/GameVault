@@ -10,6 +10,10 @@ const html = fs.readFileSync(path.join(ROOT, 'frontend/index.html'), 'utf8');
 const common = fs.readFileSync(path.join(ROOT, 'frontend/assets/js/common.js'), 'utf8');
 const css = fs.readFileSync(path.join(ROOT, 'frontend/assets/css/styles.css'), 'utf8');
 const homeCss = fs.readFileSync(path.join(ROOT, 'frontend/assets/css/home-stage2.css'), 'utf8');
+const stage3Css = fs.readFileSync(path.join(ROOT, 'frontend/assets/css/responsive-stage3.css'), 'utf8');
+const gamePages = ['snake/index.html', '2048/index.html', 'minesweeper/index.html'].map((game) =>
+  fs.readFileSync(path.join(ROOT, 'frontend/games', game), 'utf8')
+);
 
 test('homepage game cards expose clear start actions for all three games', () => {
   assert.equal((html.match(/class="game-card"/g) || []).length, 3);
@@ -48,4 +52,32 @@ test('homepage enhancements retain responsive and reduced-motion rules', () => {
   assert.match(homeCss, /@media \(max-width: 700px\)/);
   assert.match(homeCss, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.game-card:focus-visible/);
+});
+
+
+test('stage-three responsive stylesheet is loaded on the homepage and all game pages', () => {
+  assert.match(html, /assets\/css\/responsive-stage3\.css/);
+  for (const page of gamePages) assert.match(page, /assets\/css\/responsive-stage3\.css/);
+});
+
+test('stage-three compact layouts prevent narrow-screen content from forcing overflow', () => {
+  assert.match(stage3Css, /@media \(max-width: 480px\)/);
+  assert.match(stage3Css, /\.stats-strip\s*\{[^}]*grid-template-columns:\s*minmax\(0,1fr\)/s);
+  assert.match(stage3Css, /\.game-card-bottom\s*\{[^}]*flex-wrap:\s*wrap/s);
+  assert.match(stage3Css, /\.game-meta\s*\{[^}]*min-width:\s*0/s);
+  assert.match(stage3Css, /overflow-wrap:\s*anywhere/);
+  assert.match(stage3Css, /@media \(max-width: 380px\)/);
+});
+
+test('stage-three touch targets and keyboard focus have consistent affordances', () => {
+  assert.match(stage3Css, /\.icon-button\s*\{[^}]*width:44px;[^}]*height:44px;/s);
+  assert.match(stage3Css, /\.mobile-controls button\s*\{[^}]*min-width:44px;[^}]*min-height:44px;/s);
+  assert.match(stage3Css, /\[tabindex="0"\]:focus-visible/);
+  assert.match(stage3Css, /@media \(prefers-reduced-motion:reduce\)/);
+});
+
+test('touch devices receive pressed feedback without hover-only movement', () => {
+  assert.match(stage3Css, /@media \(hover:none\), \(pointer:coarse\)/);
+  assert.match(stage3Css, /\.game-card:active/);
+  assert.match(stage3Css, /\.recent-game-card:active/);
 });
