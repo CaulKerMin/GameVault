@@ -17,6 +17,10 @@ test('homepage game cards expose clear start actions for all three games', () =>
   assert.equal((html.match(/立即开玩/g) || []).length, 3);
 });
 
+test('homepage search keeps an accurate visible-card count', () => {
+  assert.match(common, /if \(match\) visible \+= 1;/);
+});
+
 test('recent-play panel is hidden until a known game is available', () => {
   assert.match(html, /data-recent-wrap hidden/);
   assert.match(html, /data-recent-game-icon/);
