@@ -3,3 +3,6 @@ backend/data/leaderboard.json
 backend/data/*.tmp
 .DS_Store
 .env
+
+# Generated Chromium viewport screenshots
+artifacts/browser-ui/
