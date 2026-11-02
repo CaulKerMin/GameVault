@@ -90,6 +90,8 @@ async function assertTheme(page, theme, viewport) {
     'Primary text contrast should be at least 7:1 in ' + theme + ' mode');
   assert.ok(state.documentWidth <= viewport.width + 1,
     'Theme changes must not introduce horizontal overflow: ' + JSON.stringify(state));
+  assert.deepEqual(state.overflowElements, [],
+    'No visible element should extend beyond the viewport: ' + JSON.stringify(state.overflowElements));
 }
 
 test('Chromium verifies dark/light theme switching and persistence on every page', {
