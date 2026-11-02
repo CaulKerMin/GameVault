@@ -205,7 +205,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .canvas-wrap { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: #101629; }
 #snake-canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; touch-action: none; }
 .board-overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(7, 10, 21, .58); backdrop-filter: blur(5px); text-align: center; }
-.overlay-card { max-width: 280px; padding: 22px; border: 1px solid rgba(255,255,255,.15); border-radius: 20px; background: rgba(20, 25, 44, .94); box-shadow: var(--shadow); }
+.overlay-card { max-width: 280px; padding: 22px; border: 1px solid rgba(255,255,255,.15); border-radius: 20px; background: rgba(20, 25, 44, .94); color: #f3f5ff; box-shadow: var(--shadow); }
 .overlay-card h3 { margin: 0 0 6px; font-family: var(--display-font); font-size: 1.45rem; }
 .overlay-card p { margin: 0 0 15px; color: #b5bfd9; font-size: .85rem; }
 .dpad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); justify-content: center; gap: 6px; margin: 18px auto 0; }
