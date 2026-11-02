@@ -102,6 +102,9 @@ test('Chromium verifies dark/light theme switching and persistence on every page
             body: JSON.stringify({ ok: true, entries: [] }),
           }));
           await page.goto(baseUrl + route.path, { waitUntil: 'networkidle' });
+          // The initial dark theme is the default and is not written until a user toggles it.
+          // Seed it explicitly so this case can also verify reload persistence.
+          await page.evaluate(() => localStorage.setItem('gamevault.theme', 'dark'));
           await assertTheme(page, 'dark', route);
           await page.screenshot({
             path: path.join(screenshotDir, 'theme-' + route.id + '-dark.png'),
@@ -265,14 +268,15 @@ test('Chromium verifies homepage leaderboard rendering and empty state', {
         const groups = leaderboard.locator('.mini-leaderboard-group');
         assert.equal(await groups.count(), 2);
 
-        const snakeGroup = groups.nth(0);
+        // JavaScript enumerates integer-like object keys (the "2048" key) before string keys.
+        const snakeGroup = groups.filter({ hasText: '贪吃蛇' });
         assert.equal(await snakeGroup.locator('.leaderboard-row').count(), 3);
         assert.match(await snakeGroup.locator('.leaderboard-row').nth(0).innerText(), /玩家甲.*300/s);
         assert.match(await snakeGroup.locator('.leaderboard-row').nth(1).innerText(), /玩家乙.*250/s);
         assert.match(await snakeGroup.locator('.leaderboard-row').nth(2).innerText(), /玩家丙.*200/s);
         assert.deepEqual(await snakeGroup.locator('.leaderboard-rank').allTextContents(), ['01', '02', '03']);
 
-        const puzzleGroup = groups.nth(1);
+        const puzzleGroup = groups.filter({ hasText: '2048' });
         assert.match(await puzzleGroup.locator('h3').innerText(), /2048/);
         assert.equal(await puzzleGroup.locator('.leaderboard-row').count(), 2);
         assert.match(await puzzleGroup.locator('.leaderboard-row').nth(0).innerText(), /合并大师.*4,096/);
@@ -331,8 +335,10 @@ test('Chromium verifies homepage leaderboard rendering and empty state', {
         assert.match(await leaderboard.locator('.leaderboard-status').innerText(), /API 暂不可用，当前显示本机记录/);
         const snakeGroup = leaderboard.locator('.mini-leaderboard-group').filter({ hasText: '贪吃蛇' });
         assert.equal(await snakeGroup.locator('.leaderboard-row').count(), 2);
-        assert.match(await snakeGroup.locator('.leaderboard-row').nth(0).innerText(), /本地高手.*456/);
-        assert.match(await snakeGroup.locator('.leaderboard-row').nth(1).innerText(), /本地玩家.*125/);
+        assert.ok((await snakeGroup.locator('.leaderboard-row').nth(0).innerText()).includes('本地高手'));
+        assert.ok((await snakeGroup.locator('.leaderboard-row').nth(0).innerText()).includes('456'));
+        assert.ok((await snakeGroup.locator('.leaderboard-row').nth(1).innerText()).includes('本地玩家'));
+        assert.ok((await snakeGroup.locator('.leaderboard-row').nth(1).innerText()).includes('125'));
       } finally {
         await page.close();
       }
