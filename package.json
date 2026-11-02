@@ -1,8 +1,8 @@
 {
   "name": "gamevault-a",
-  "version": "2.6.5",
+  "version": "2.6.6",
   "private": true,
-  "description": "GameVault — responsive browser game hub with viewport-fitted desktop layouts, compact snake overlay, Chromium viewport QA for all games, accessible controls, local/shared leaderboards, automated Pages deployment and full-source packaging.",
+  "description": "GameVault — responsive browser game hub with viewport-fitted desktop layouts, compact snake overlay, dark/light theme and homepage interaction QA, Chromium viewport QA for all games, accessible controls, local/shared leaderboards, automated Pages deployment and full-source packaging.",
   "scripts": {
     "dev": "node scripts/dev.js",
     "dev:web": "node frontend/dev-server.js",
