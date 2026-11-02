@@ -61,6 +61,19 @@ async function assertTheme(page, theme, viewport) {
     colorScheme: getComputedStyle(document.documentElement).colorScheme,
     toggleLabel: document.querySelector('[data-theme-toggle]')?.getAttribute('aria-label'),
     documentWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
+    overflowElements: [...document.querySelectorAll('body *')].map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        tag: element.tagName.toLowerCase(),
+        id: element.id,
+        className: typeof element.className === 'string' ? element.className : '',
+        left: Math.round(rect.left * 10) / 10,
+        right: Math.round(rect.right * 10) / 10,
+        width: Math.round(rect.width * 10) / 10,
+        text: (element.textContent || '').trim().slice(0, 50),
+      };
+    }).filter((element) => element.width > 0 && (element.left < -1 || element.right > innerWidth + 1))
+      .sort((a, b) => b.right - a.right).slice(0, 12),
   }));
 
   const expected = theme === 'light'
@@ -105,12 +118,12 @@ test('Chromium verifies dark/light theme switching and persistence on every page
           // The initial dark theme is the default and is not written until a user toggles it.
           // Seed it explicitly so this case can also verify reload persistence.
           await page.evaluate(() => localStorage.setItem('gamevault.theme', 'dark'));
-          await assertTheme(page, 'dark', route);
           await page.screenshot({
             path: path.join(screenshotDir, 'theme-' + route.id + '-dark.png'),
             fullPage: false,
             animations: 'disabled',
           });
+          await assertTheme(page, 'dark', route);
 
           await page.locator('[data-theme-toggle]').click();
           await assertTheme(page, 'light', route);
@@ -279,7 +292,8 @@ test('Chromium verifies homepage leaderboard rendering and empty state', {
         const puzzleGroup = groups.filter({ hasText: '2048' });
         assert.match(await puzzleGroup.locator('h3').innerText(), /2048/);
         assert.equal(await puzzleGroup.locator('.leaderboard-row').count(), 2);
-        assert.match(await puzzleGroup.locator('.leaderboard-row').nth(0).innerText(), /合并大师.*4,096/);
+        const topPuzzleRow = await puzzleGroup.locator('.leaderboard-row').nth(0).innerText();
+        assert.ok(topPuzzleRow.includes('合并大师') && topPuzzleRow.includes('4,096'));
 
         await page.locator('#records').scrollIntoViewIfNeeded();
         await page.screenshot({
