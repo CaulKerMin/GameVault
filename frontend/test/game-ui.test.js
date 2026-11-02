@@ -74,9 +74,12 @@ test('all three game pages expose the release version and request matching cache
     const page = gamePages[index];
     assert.match(page, new RegExp('data-game="' + game + '"'));
     assert.ok(page.includes('<meta name="gamevault-ui-version" content="' + packageVersion + '">'));
-    assert.match(page, /responsive-stage3\\.css[\\s\\S]*game-stage4\\.css\\?v=/);
-    const cacheVersion = page.match(/game-stage4\\.css\\?v=([^"']+)/)?.[1];
-    assert.ok(cacheVersion, game + ' must use a versioned game stylesheet');
+    const responsiveStylesheetIndex = page.indexOf('responsive-stage3.css');
+    const gameStylesheetPrefix = 'game-stage4.css?v=';
+    const gameStylesheetIndex = page.indexOf(gameStylesheetPrefix);
+    assert.ok(responsiveStylesheetIndex >= 0 && gameStylesheetIndex > responsiveStylesheetIndex,
+      game + ' must load the shared game stylesheet after responsive styles');
+    const cacheVersion = page.slice(gameStylesheetIndex + gameStylesheetPrefix.length).split('"')[0];
     cacheVersions.push(cacheVersion);
   }
   assert.deepEqual(cacheVersions, [packageVersion, packageVersion, packageVersion]);
