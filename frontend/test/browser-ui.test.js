@@ -73,8 +73,9 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
 
             const metrics = await page.evaluate((selectors) => {
               function box(selector) {
+                if (!selector) return null;
                 const element = document.querySelector(selector);
-                if (!selector || !element) return null;
+                if (!element) return null;
                 const rect = element.getBoundingClientRect();
                 const style = getComputedStyle(element);
                 return {
@@ -102,7 +103,7 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
                 boardStage: box(selectors.boardStage),
                 status: box('#status-pill'),
               };
-            }, { board: game.board, touch: game.touch });
+            }, { board: game.board, touch: game.touch, overlay: game.overlay || null, boardStage: game.boardStage || null });
 
             const detail = JSON.stringify(metrics);
             assert.equal(metrics.gameId, game.id, 'The expected game page should load. ' + detail);
