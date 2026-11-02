@@ -79,8 +79,22 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install Chromium for browser UI tests
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+
       - name: Run automated tests
         run: npm test
+
+      - name: Upload browser UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameVault-browser-ui-${{ github.run_number }}
+          path: artifacts/browser-ui/
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Verify release files and references
         run: npm run verify:release
@@ -97,7 +111,7 @@ jobs:
             -x ".git/*" "*/.git/*" \
                "node_modules/*" "*/node_modules/*" \
                "backend/data/*.json" \
-               "*.zip" "*.sha256"
+               "*.zip" "*.sha256" "artifacts/browser-ui/*" "artifacts/browser-ui/**/*"
           (cd "${RUNNER_TEMP}" && sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_PATH}.sha256")
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "archive_path=${ARCHIVE_PATH}" >> "${GITHUB_OUTPUT}"
