@@ -51,6 +51,7 @@ UI-STAGE4-REPORT.md           游戏内布局与交互细节优化报告
 UI-2048-VIEWPORT-HOTFIX.md    2048 首屏居中与导航细节修复报告
 UI-GAMES-VIEWPORT-REPORT.md   三款游戏桌面首屏居中与适配报告
 UI-ROADMAP.md                 UI 专项迭代路线图
+UI-STAGE5-REPORT.md           深浅主题、首页交互与全站视口最终验收报告
 ```
 
 ## 一、通过 GitHub 网页部署（无需本机运行）
