@@ -60,6 +60,8 @@ async function assertTheme(page, theme, viewport) {
     text: getComputedStyle(document.documentElement).getPropertyValue('--text').trim(),
     colorScheme: getComputedStyle(document.documentElement).colorScheme,
     toggleLabel: document.querySelector('[data-theme-toggle]')?.getAttribute('aria-label'),
+    overlayHeadingColor: document.querySelector('.overlay-card h3')
+      ? getComputedStyle(document.querySelector('.overlay-card h3')).color : null,
     documentWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
     overflowElements: [...document.querySelectorAll('body *')].map((element) => {
       const rect = element.getBoundingClientRect();
@@ -86,6 +88,10 @@ async function assertTheme(page, theme, viewport) {
   assert.equal(state.text, expected.text, 'The theme text token should match');
   assert.equal(state.colorScheme, expected.colorScheme, 'The browser color scheme should match');
   assert.equal(state.toggleLabel, expected.toggleLabel, 'The theme toggle should announce the next action');
+  if (state.overlayHeadingColor !== null) {
+    assert.equal(state.overlayHeadingColor, 'rgb(243, 245, 255)',
+      'The snake overlay title must stay light on its dark canvas in both themes');
+  }
   assert.ok(contrastRatio(state.text, state.background) >= 7,
     'Primary text contrast should be at least 7:1 in ' + theme + ' mode');
   assert.ok(state.documentWidth <= viewport.width + 1,
