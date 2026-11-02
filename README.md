@@ -1,4 +1,4 @@
-# GameVault · v2.6.6
+# GameVault · v2.6.7
 
 一个轻量、响应式的浏览器小游戏站点，包含 **贪吃蛇、2048、扫雷**。前端与排行榜 API 已分离：前端可以独立部署到 GitHub Pages；GitHub Actions 会自动运行测试、发布静态前端，并生成可下载的完整项目 ZIP。
 
@@ -6,11 +6,12 @@
 
 **你不需要在自己的电脑上安装 Node.js 或运行项目。** 将项目文件上传到 GitHub 后，GitHub Actions 会在云端完成检查、打包和 GitHub Pages 发布。你只需要使用浏览器管理 GitHub 仓库。
 
-- 当前版本：**v2.6.6 · GitHub Pages 自动部署版**。
+- 当前版本：**v2.6.7 · GitHub Pages 自动部署版**。
 - 每次向 `main` 或 `master` 分支 Push，都会自动运行测试与发布检查。
 - 检查通过后，Actions 自动将 `frontend/` 发布到 GitHub Pages。
 - 发布前临时安装 Playwright + Chromium，对三款游戏执行 5 种桌面视口和 2 种手机视口的真实浏览器回归，并上传截图 Artifact（保留 14 天）。
 - 浏览器测试额外检查贪吃蛇开局 / 暂停提示卡是否超出画布或覆盖控制区。
+- v2.6.7 恢复原始游戏区域尺寸：2048、扫雷格子和贪吃蛇画布保持正方形，游戏区域最大宽度回到 480px；较矮窗口允许纵向滚动，不再为了首屏强行缩小棋盘。
 - Chromium 同时回归深浅主题切换 / 刷新持久化、跨游戏页面主题同步、首页搜索、最近游玩跳转、排行榜前三名、空状态和离线本机成绩回退。
 - 手机首页会额外检查所有可见元素的边界；窄屏装饰圆环不会再制造横向溢出。
 - 浅色主题下贪吃蛇提示卡标题保持浅色文字，并由 Chromium 检查其颜色，避免深色画布上出现低对比度文字。
@@ -27,7 +28,7 @@ frontend/                    静态前端，GitHub Pages 实际发布目录
   assets/css/styles.css      主题、布局与响应式样式
   assets/css/home-stage2.css 首页卡片、最近游玩与排行榜视觉增强
   assets/css/responsive-stage3.css 全页面响应式、触控与键盘焦点细节
-  assets/css/game-stage4.css 游戏页面布局、HUD、棋盘与排行榜视觉优化
+  assets/css/game-layout-stage6.css 游戏主区域外围布局，不压缩棋盘与画布
   assets/js/                 API 适配、主题与首页交互
   games/                     三款独立小游戏
   .nojekyll                  禁用 Pages 的 Jekyll 处理
@@ -52,6 +53,7 @@ UI-2048-VIEWPORT-HOTFIX.md    2048 首屏居中与导航细节修复报告
 UI-GAMES-VIEWPORT-REPORT.md   三款游戏桌面首屏居中与适配报告
 UI-ROADMAP.md                 UI 专项迭代路线图
 UI-STAGE5-REPORT.md           深浅主题、首页交互与全站视口最终验收报告
+UI-STAGE6-REPORT.md           恢复原始游戏区域尺寸与正方形棋盘报告
 ```
 
 ## 一、通过 GitHub 网页部署（无需本机运行）
@@ -65,7 +67,7 @@ UI-STAGE5-REPORT.md           深浅主题、首页交互与全站视口最终�
 
 ### 第 2 步：上传项目文件
 
-1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.6.6`）。
+1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.6.7`）。
 2. 打开解压后出现的项目文件夹。
 3. 在 GitHub 仓库页面选择 `Add file` → `Upload files`。
 4. 将项目文件夹**里面的所有文件和目录**拖入上传区域，包括隐藏目录 `.github/`、隐藏文件 `.nojekyll` 和 `.gitignore`；不要只上传 ZIP 文件本身，也不要把整个项目文件夹作为一个子目录上传。
@@ -93,7 +95,7 @@ UI-STAGE5-REPORT.md           深浅主题、首页交互与全站视口最终�
 
 1. 打开仓库 `Actions`。
 2. 点击最新一次成功的 `GameVault · GitHub Pages 部署与完整源码打包` 运行记录。
-3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.6.6-full-project`。
+3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.6.7-full-project`。
 4. 下载内容包含完整项目 ZIP 和 `.sha256` 校验文件，默认保留 **90 天**。每次部署都会生成新的版本包。
 
 你也可以在 `Actions` → 选择该工作流 → `Run workflow`，手动触发一次检查、打包和部署。
