@@ -15,7 +15,7 @@ try {
 
 const games = [
   { id: '2048', route: '/games/2048/index.html', board: '.puzzle-board', touch: '.mobile-controls button' },
-  { id: 'snake', route: '/games/snake/index.html', board: '.canvas-wrap', touch: '.dpad button' },
+  { id: 'snake', route: '/games/snake/index.html', board: '.canvas-wrap', touch: '.dpad button', overlay: '.overlay-card', boardStage: '.board-stage' },
   { id: 'minesweeper', route: '/games/minesweeper/index.html', board: '.mine-board', touch: '#flag-mode-button' },
 ];
 
@@ -74,7 +74,7 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
             const metrics = await page.evaluate((selectors) => {
               function box(selector) {
                 const element = document.querySelector(selector);
-                if (!element) return null;
+                if (!selector || !element) return null;
                 const rect = element.getBoundingClientRect();
                 const style = getComputedStyle(element);
                 return {
@@ -98,6 +98,8 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
                 board: box(selectors.board),
                 controls: box('.game-controls'),
                 touch: box(selectors.touch),
+                overlay: box(selectors.overlay),
+                boardStage: box(selectors.boardStage),
                 status: box('#status-pill'),
               };
             }, { board: game.board, touch: game.touch });
@@ -111,6 +113,16 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
             assert.ok(metrics.board.left >= -1 && metrics.board.right <= viewport.width + 1,
               'The game board should fit horizontally. ' + detail);
             assert.deepEqual(pageErrors, [], 'The page should not throw JavaScript exceptions.');
+
+            if (game.id === 'snake') {
+              assert.ok(metrics.overlay && metrics.overlay.visible && metrics.boardStage,
+                'The snake start / pause card and canvas stage should both be visible. ' + detail);
+              assert.ok(metrics.overlay.top >= metrics.boardStage.top - 1
+                && metrics.overlay.bottom <= metrics.boardStage.bottom + 1,
+              'The snake overlay card must stay completely inside its canvas. ' + detail);
+              assert.ok(metrics.overlay.bottom <= metrics.controls.top + 1,
+                'The snake overlay must not overlap the controls below the canvas. ' + detail);
+            }
 
             if (viewport.width > 820) {
               assert.ok(metrics.heading && metrics.heading.bottom <= viewport.height + 1,
