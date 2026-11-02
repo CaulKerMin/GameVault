@@ -96,6 +96,11 @@ test('Chromium verifies dark/light theme switching and persistence on every page
         page.on('pageerror', (error) => pageErrors.push(error.message));
 
         try {
+          await page.route('http://localhost:3001/api/**', (request) => request.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ ok: true, entries: [] }),
+          }));
           await page.goto(baseUrl + route.path, { waitUntil: 'networkidle' });
           await assertTheme(page, 'dark', route);
           await page.screenshot({
@@ -161,6 +166,11 @@ test('Chromium verifies homepage search, recent-play state and navigation', {
         page.on('pageerror', (error) => pageErrors.push(error.message));
 
         try {
+          await page.route('http://localhost:3001/api/**', (request) => request.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ ok: true, entries: [] }),
+          }));
           await page.goto(baseUrl + '/', { waitUntil: 'networkidle' });
           const search = page.locator('[data-game-search]');
 
