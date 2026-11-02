@@ -1,4 +1,4 @@
-# GameVault · v2.6.4
+# GameVault · v2.6.5
 
 一个轻量、响应式的浏览器小游戏站点，包含 **贪吃蛇、2048、扫雷**。前端与排行榜 API 已分离：前端可以独立部署到 GitHub Pages；GitHub Actions 会自动运行测试、发布静态前端，并生成可下载的完整项目 ZIP。
 
@@ -6,10 +6,11 @@
 
 **你不需要在自己的电脑上安装 Node.js 或运行项目。** 将项目文件上传到 GitHub 后，GitHub Actions 会在云端完成检查、打包和 GitHub Pages 发布。你只需要使用浏览器管理 GitHub 仓库。
 
-- 当前版本：**v2.6.4 · GitHub Pages 自动部署版**。
+- 当前版本：**v2.6.5 · GitHub Pages 自动部署版**。
 - 每次向 `main` 或 `master` 分支 Push，都会自动运行测试与发布检查。
 - 检查通过后，Actions 自动将 `frontend/` 发布到 GitHub Pages。
 - 发布前临时安装 Playwright + Chromium，对三款游戏执行 5 种桌面视口和 2 种手机视口的真实浏览器回归，并上传截图 Artifact（保留 14 天）。
+- 浏览器测试额外检查贪吃蛇开局 / 暂停提示卡是否超出画布或覆盖控制区。
 - 同一次工作流还会生成完整项目 ZIP，包含前端、后端、测试、配置、文档和 Actions 工作流。
 - 完整 ZIP 和 SHA-256 校验文件作为 Actions Artifact 保留 90 天，可直接从 GitHub 下载。
 - 支持在 Actions 页面手动运行部署工作流（`workflow_dispatch`）。
@@ -60,7 +61,7 @@ UI-ROADMAP.md                 UI 专项迭代路线图
 
 ### 第 2 步：上传项目文件
 
-1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.6.4`）。
+1. 下载并解压本项目 ZIP（建议解压到一个新文件夹，例如 `GameVault-v2.6.5`）。
 2. 打开解压后出现的项目文件夹。
 3. 在 GitHub 仓库页面选择 `Add file` → `Upload files`。
 4. 将项目文件夹**里面的所有文件和目录**拖入上传区域，包括隐藏目录 `.github/`、隐藏文件 `.nojekyll` 和 `.gitignore`；不要只上传 ZIP 文件本身，也不要把整个项目文件夹作为一个子目录上传。
@@ -88,7 +89,7 @@ UI-ROADMAP.md                 UI 专项迭代路线图
 
 1. 打开仓库 `Actions`。
 2. 点击最新一次成功的 `GameVault · GitHub Pages 部署与完整源码打包` 运行记录。
-3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.6.4-full-project`。
+3. 在运行详情页底部的 `Artifacts` 区域，下载 `GameVault-v2.6.5-full-project`。
 4. 下载内容包含完整项目 ZIP 和 `.sha256` 校验文件，默认保留 **90 天**。每次部署都会生成新的版本包。
 
 你也可以在 `Actions` → 选择该工作流 → `Run workflow`，手动触发一次检查、打包和部署。
