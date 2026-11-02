@@ -18,6 +18,8 @@
   .header-actions .button { padding-inline:12px; font-size:.84rem; }
 }
 @media (max-width:700px) {
+  /* The orbit is circular, so rotation adds no visible value and expands its scroll box. */
+  .orbit { transform:none; }
   .header-inner { gap:10px; }
   .recent-game-card { width:100%; }
   .home-leaderboard .leaderboard-status { max-width:100%; }
