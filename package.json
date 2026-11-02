@@ -1,6 +1,6 @@
 {
   "name": "gamevault-a",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "private": true,
   "description": "GameVault — responsive browser game hub with viewport-fitted desktop layouts for all games, accessible controls, local/shared leaderboards, automated Pages deployment and full-source packaging.",
   "scripts": {

@@ -10,6 +10,7 @@ const gamePages = ['snake/index.html', '2048/index.html', 'minesweeper/index.htm
   fs.readFileSync(path.join(ROOT, 'frontend/games', game), 'utf8')
 );
 const stage4Css = fs.readFileSync(path.join(ROOT, 'frontend/assets/css/game-stage4.css'), 'utf8');
+const packageVersion = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
 
 test('all game pages load the stage-four stylesheet after the shared responsive styles', () => {
   for (const page of gamePages) {
@@ -67,11 +68,18 @@ test('game-page home navigation labels do not include a decorative left arrow', 
   }
 });
 
-test('all three game pages load a cache-versioned shared game stylesheet', () => {
+test('all three game pages expose the release version and request matching cache-busted CSS', () => {
+  const cacheVersions = [];
   for (const [index, game] of ['snake', '2048', 'minesweeper'].entries()) {
-    assert.match(gamePages[index], new RegExp('data-game="' + game + '"'));
-    assert.match(gamePages[index], /responsive-stage3\.css[\s\S]*game-stage4\.css\?v=2\.6\.2/);
+    const page = gamePages[index];
+    assert.match(page, new RegExp('data-game="' + game + '"'));
+    assert.ok(page.includes('<meta name="gamevault-ui-version" content="' + packageVersion + '">'));
+    assert.match(page, /responsive-stage3\\.css[\\s\\S]*game-stage4\\.css\\?v=/);
+    const cacheVersion = page.match(/game-stage4\\.css\\?v=([^"']+)/)?.[1];
+    assert.ok(cacheVersion, game + ' must use a versioned game stylesheet');
+    cacheVersions.push(cacheVersion);
   }
+  assert.deepEqual(cacheVersions, [packageVersion, packageVersion, packageVersion]);
 });
 
 test('all three game pages share a centered, viewport-fitted desktop first view', () => {
