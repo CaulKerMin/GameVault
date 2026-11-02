@@ -14,9 +14,9 @@ try {
 }
 
 const games = [
-  { id: '2048', route: '/games/2048/index.html', board: '.puzzle-board', touch: '.mobile-controls button' },
+  { id: '2048', route: '/games/2048/index.html', board: '.puzzle-board', cells: '.tile', expectedCells: 16, touch: '.mobile-controls button' },
   { id: 'snake', route: '/games/snake/index.html', board: '.canvas-wrap', touch: '.dpad button', overlay: '.overlay-card', boardStage: '.board-stage' },
-  { id: 'minesweeper', route: '/games/minesweeper/index.html', board: '.mine-board', touch: '#flag-mode-button' },
+  { id: 'minesweeper', route: '/games/minesweeper/index.html', board: '.mine-board', cells: '.mine-cell', expectedCells: 64, touch: '#flag-mode-button' },
 ];
 
 const viewports = [
@@ -97,13 +97,20 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
                 heading: box('.game-page-heading'),
                 mainPanel: box('.game-main-panel'),
                 board: box(selectors.board),
+                boardCells: selectors.cells ? [...document.querySelectorAll(selectors.cells)].map((element) => {
+                  const rect = element.getBoundingClientRect();
+                  return {
+                    width: Math.round(rect.width * 10) / 10,
+                    height: Math.round(rect.height * 10) / 10,
+                  };
+                }) : [],
                 controls: box('.game-controls'),
                 touch: box(selectors.touch),
                 overlay: box(selectors.overlay),
                 boardStage: box(selectors.boardStage),
                 status: box('#status-pill'),
               };
-            }, { board: game.board, touch: game.touch, overlay: game.overlay || null, boardStage: game.boardStage || null });
+            }, { board: game.board, cells: game.cells || null, touch: game.touch, overlay: game.overlay || null, boardStage: game.boardStage || null });
 
             const detail = JSON.stringify(metrics);
             assert.equal(metrics.gameId, game.id, 'The expected game page should load. ' + detail);
@@ -113,6 +120,17 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
             assert.ok(metrics.documentWidth <= viewport.width + 1, 'Unexpected horizontal page overflow. ' + detail);
             assert.ok(metrics.board.left >= -1 && metrics.board.right <= viewport.width + 1,
               'The game board should fit horizontally. ' + detail);
+            assert.ok(Math.abs(metrics.board.width - metrics.board.height) <= 1.5,
+              'The playable surface must remain square. ' + detail);
+            const minimumBoardSize = viewport.width > 820 ? 420 : 260;
+            assert.ok(metrics.board.width >= minimumBoardSize,
+              'The playable surface must not be shrunk to fit the viewport height. ' + detail);
+            if (game.cells) {
+              assert.equal(metrics.boardCells.length, game.expectedCells,
+                'The expected number of playable cells should be present. ' + detail);
+              assert.ok(metrics.boardCells.every((cell) => Math.abs(cell.width - cell.height) <= 1.5),
+                'Every puzzle / minesweeper cell must remain square. ' + detail);
+            }
             assert.deepEqual(pageErrors, [], 'The page should not throw JavaScript exceptions.');
 
             if (game.id === 'snake') {
@@ -126,14 +144,10 @@ test('Chromium verifies all game pages across desktop and mobile viewports', {
             }
 
             if (viewport.width > 820) {
-              assert.ok(metrics.heading && metrics.heading.bottom <= viewport.height + 1,
-                'The game heading should fit in the first desktop viewport. ' + detail);
-              assert.ok(metrics.mainPanel.bottom <= viewport.height + 1,
-                'The complete main game panel should fit in the first desktop viewport. ' + detail);
-              assert.ok(metrics.board.bottom <= viewport.height + 1,
-                'The complete game board should fit in the first desktop viewport. ' + detail);
-              assert.ok(metrics.controls.bottom <= viewport.height + 1,
-                'The main game controls should fit in the first desktop viewport. ' + detail);
+              assert.ok(metrics.heading && metrics.heading.top < viewport.height,
+                'The game heading should begin in the first desktop viewport. ' + detail);
+              assert.ok(metrics.board.top < viewport.height,
+                'The playable surface should begin in the first desktop viewport. ' + detail);
             } else {
               assert.ok(metrics.touch && metrics.touch.visible,
                 'The mobile touch control should be visible. ' + detail);
